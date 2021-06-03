@@ -1,0 +1,17 @@
+{
+  "name": "Custom Scenario Assets",
+  "description": "Loads custom static objects for use in missions!",
+  "dll_file": "CustomScenarioAssets.dll",
+  "last_edit": 637579188605105269,
+  "pub_id": "",
+  "json_version": "",
+  "version": "",
+  "tagline": "",
+  "repository": "",
+  "is_public": false,
+  "unlisted": false,
+  "preview_image": "",
+  "web_preview_image": "",
+  "mod_dependencies": null,
+  "ContentType": 1
+}
