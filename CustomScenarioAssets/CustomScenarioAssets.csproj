@@ -72,6 +72,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
     <Compile Include="Patches\Patch_VTResources.cs" />
+    <Compile Include="Patches\Patch_VTScenarioEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
