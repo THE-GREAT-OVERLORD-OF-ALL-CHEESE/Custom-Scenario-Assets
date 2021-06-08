@@ -15,6 +15,14 @@ public class CustomScenarioAssets : VTOLMOD
 
     public Dictionary<string, CustomStaticPropBase> customProps;
 
+    public bool updatedAircraft;
+    public Dictionary<string, CustomUnitBase> customUnits;
+    public Dictionary<string, UnitCatalogue.Unit> unitCatalogUnits;
+
+    public GameObject firePrefab;
+    public GameObject largeFirePrefab;
+    public AudioClip cannonClip;
+
     public override void ModLoaded()
     {
         HarmonyInstance harmony = HarmonyInstance.Create("cheese.customScenarioAssets");
@@ -41,6 +49,19 @@ public class CustomScenarioAssets : VTOLMOD
         AddCustomStaticProp(new CustomStaticProp_AirportTentHangar("Airport Parts", "cheese_airport_tentHangar", "Tent Hangar", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportJumboHangar("Airport Parts", "cheese_airport_jumboHangar", "Jumbo Hangar", UnitSpawn.PlacementModes.Any, true));
         StartCoroutine(LoadAssetBundles());
+
+        customUnits = new Dictionary<string, CustomUnitBase>();
+        unitCatalogUnits = new Dictionary<string, UnitCatalogue.Unit>();
+
+        AddCustomUnit(new CustomUnitBase(Teams.Allied, "Test Category", "cheese_testunit", "Test Unit", "This is an example test unit to test adding custom units!", UnitSpawn.PlacementModes.Any, true));
+
+        AddCustomUnit(new CustomUnit_AngryCube(Teams.Allied, "Test Category", "cheese_angrycube_allied", "Angry Cube", "This is an angry cube to test custom VT events and behaviours! It can't do anything intersting right now.", UnitSpawn.PlacementModes.Any, true));
+        AddCustomUnit(new CustomUnit_AngryCube(Teams.Enemy, "Test Category", "cheese_angrycube_enemy", "Angry Cube", "This is an angry cube to test custom VT events and behaviours! It can't do anything intersting right now.", UnitSpawn.PlacementModes.Any, true));
+
+        AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Allied, "Test Category", "cheese_example_aabofors_allied", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
+        AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Enemy, "Test Category", "cheese_example_aabofors_enemy", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
+
+        GetFirePrefabs();
     }
 
     private IEnumerator LoadAssetBundles()
@@ -84,7 +105,7 @@ public class CustomScenarioAssets : VTOLMOD
             customProps.Add(prop.objectID, prop);
         }
         else {
-            Debug.Log("A prop with this name already exists.");
+            Debug.Log("A prop with the id: " + prop.objectID + " already exists.");
         }
     }
 
@@ -121,5 +142,42 @@ public class CustomScenarioAssets : VTOLMOD
         temp.transform.position = Vector3.down * 30000;
         Destroy(temp, 1);
         return temp;
+    }
+
+    public void AddCustomUnit(CustomUnitBase unit)
+    {
+        if (customUnits.ContainsKey(unit.unitID) == false)
+        {
+            customUnits.Add(unit.unitID, unit);
+        }
+        else
+        {
+            Debug.Log("A unit with the id: " + unit.unitID + " already exists.");
+        }
+    }
+
+    public GameObject CreateTempCustomUnitPrefab(CustomUnitBase unit)
+    {
+        Debug.Log("Spawning custom unit: " + unit.unitName);
+        GameObject temp = unit.Spawn();
+        temp.transform.position = Vector3.down * 30000;
+        Destroy(temp, 1);
+        return temp;
+    }
+
+    public void GetFirePrefabs() {
+        UnitCatalogue.UpdateCatalogue();
+
+        Debug.Log("Trying to get fire!");
+        firePrefab = UnitCatalogue.GetUnitPrefab("SRADTruck").GetComponent<VehicleFireDeath>().firePrefab;
+        Debug.Log("Got fire!");
+
+        Debug.Log("Trying to get large fire!");
+        largeFirePrefab = UnitCatalogue.GetUnitPrefab("ABomberAI").GetComponent<VehicleFireDeath>().firePrefab;
+        Debug.Log("Got large fire!");
+
+        Debug.Log("Trying to get cannon SFX!");
+        cannonClip = UnitCatalogue.GetUnitPrefab("alliedMBT1").GetComponent<Gun>().fireAudioClip;
+        Debug.Log("Got cannon SFX!");
     }
 }
