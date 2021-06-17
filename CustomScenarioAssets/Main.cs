@@ -102,7 +102,9 @@ public class CustomScenarioAssets : VTOLMOD
 
     public void AddCustomStaticProp(CustomStaticPropBase prop) {
         if (customProps.ContainsKey(prop.objectID) == false) {
+            Debug.Log("custom prop id: " + prop.objectID + " is unique, adding to custom prop list");
             customProps.Add(prop.objectID, prop);
+            updatedAircraft = false;
         }
         else {
             Debug.Log("A prop with the id: " + prop.objectID + " already exists.");
@@ -148,6 +150,7 @@ public class CustomScenarioAssets : VTOLMOD
     {
         if (customUnits.ContainsKey(unit.unitID) == false)
         {
+            Debug.Log("custom unit id: " + unit.unitID + " is unique, adding to custom unit list");
             customUnits.Add(unit.unitID, unit);
         }
         else

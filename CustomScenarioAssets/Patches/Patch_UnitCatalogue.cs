@@ -45,9 +45,15 @@ class Patch_UnitCatalogue_UpdateCatalogue
             catalogueUnit.categoryIdx = team.keys.IndexOf(unit.category);
             catalogueUnit.unitIdx = category.keys.Count - 1;
 
-            category.units.Add(unit.unitID, catalogueUnit);
 
-            CustomScenarioAssets.instance.unitCatalogUnits.Add(unit.unitID, catalogueUnit);
+            if (category.units.ContainsKey(unit.unitID) == false)
+            {
+                category.units.Add(unit.unitID, catalogueUnit);
+            }
+            if (CustomScenarioAssets.instance.unitCatalogUnits.ContainsKey(unit.unitID) == false)
+            {
+                CustomScenarioAssets.instance.unitCatalogUnits.Add(unit.unitID, catalogueUnit);
+            }
         }
 
         UnitCatalogue.categoryOptions = new Dictionary<Teams, string[]>();
