@@ -12,6 +12,8 @@
   "unlisted": false,
   "preview_image": "",
   "web_preview_image": "",
-  "mod_dependencies": null,
+  "dependencies": [
+    "CustomAssetClasses.dll"
+  ],
   "ContentType": 1
 }

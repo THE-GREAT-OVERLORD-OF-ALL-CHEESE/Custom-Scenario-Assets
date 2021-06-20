@@ -37,6 +37,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="CustomAssetClasses">
+      <HintPath>..\Builds\CustomAssetClasses.dll</HintPath>
+    </Reference>
     <Reference Include="ModLoader">
       <HintPath>..\Dependencies\ModLoader.dll</HintPath>
     </Reference>

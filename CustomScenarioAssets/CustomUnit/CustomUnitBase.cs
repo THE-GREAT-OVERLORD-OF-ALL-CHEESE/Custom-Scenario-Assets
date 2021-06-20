@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CustomUnitBase
+
+/*public class CustomUnitBase
 {
     public Teams team = Teams.Allied;
     public string category = "Test Catagory";
@@ -76,4 +77,4 @@ public class CustomUnitBase
 
         return root;
     }
-}
+}*/

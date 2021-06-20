@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class CustomStaticPropBase
+/*public class CustomStaticPropBase
 {
     public string category = "Cheeses Example Props";
     public string objectID = "cheese_1m_cube";
@@ -24,4 +24,4 @@ public class CustomStaticPropBase
     public virtual GameObject Spawn() {
         return GameObject.CreatePrimitive(PrimitiveType.Cube);
     }
-}
+}*/
