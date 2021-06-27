@@ -48,7 +48,7 @@ public class CustomScenarioAssets : VTOLMOD
         AddCustomStaticProp(new CustomStaticProp_ATCTower("Airport Parts", "cheese_airport_tower", "Tower", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportTentHangar("Airport Parts", "cheese_airport_tentHangar", "Tent Hangar", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportJumboHangar("Airport Parts", "cheese_airport_jumboHangar", "Jumbo Hangar", UnitSpawn.PlacementModes.Any, true));
-        StartCoroutine(LoadAssetBundles());
+        LoadAssetBundles();
 
         customUnits = new Dictionary<string, CustomUnitBase>();
         unitCatalogUnits = new Dictionary<string, UnitCatalogue.Unit>();
@@ -64,8 +64,9 @@ public class CustomScenarioAssets : VTOLMOD
         GetFirePrefabs();
     }
 
-    private IEnumerator LoadAssetBundles()
+    private void LoadAssetBundles()
     {
+        Debug.Log("Searching for .csa files in the mod folder");
         string address = Directory.GetCurrentDirectory() + @"\VTOLVR_ModLoader\mods\";
         Debug.Log("Checking for: " + address);
 
@@ -73,25 +74,90 @@ public class CustomScenarioAssets : VTOLMOD
         {
             Debug.Log(address + " exists!");
             DirectoryInfo info = new DirectoryInfo(address);
+
+            Debug.Log("Searching " + address + info.Name + " for .csa");
+            foreach (FileInfo file in info.GetFiles("*.csa"))
+            {
+                Debug.Log("Found " + file.FullName);
+                StartCoroutine(LoadAssetBundle(file));
+            }
+
             foreach (DirectoryInfo directory in info.GetDirectories())
             {
                 Debug.Log("Searching " + address + directory.Name + " for .csa");
                 foreach (FileInfo file in directory.GetFiles("*.csa")) {
-                    AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(file.FullName);
-                    yield return request;
-
-                    UnityEngine.Object[] objects = request.assetBundle.LoadAllAssets(typeof(GameObject));
-                    foreach (UnityEngine.Object prefabObj in objects) {
-                        GameObject prefab = (GameObject)prefabObj;
-                        AddCustomStaticProp(new CustomStaticProp_AssetBundle(file.Name, prefab.name, prefab.name, UnitSpawn.PlacementModes.Any, true, prefab));
-                        Debug.Log("Added " + prefab.name);
-                    }
+                    Debug.Log("Found " + file.FullName);
+                    StartCoroutine(LoadAssetBundle(file));
                 }
             }
         }
         else
         {
             Debug.Log(address + " doesn't exist.");
+        }
+
+        Debug.Log("Searching for .csa files in the project folders");
+        string projectSettingsAdress = Directory.GetCurrentDirectory() + @"\VTOLVR_ModLoader\settings.json";
+        LauncherSettings.LoadSettings(projectSettingsAdress);
+        if (LauncherSettings.Settings != null)
+        {
+            string projectAdress = LauncherSettings.Settings.ProjectsFolder + @"\My Mods\";
+            if (projectAdress != null)
+            {
+                Debug.Log("Checking for: " + projectAdress);
+
+                if (Directory.Exists(projectAdress))
+                {
+                    Debug.Log(projectAdress + " exists!");
+                    DirectoryInfo info = new DirectoryInfo(projectAdress);
+                    foreach (DirectoryInfo directory in info.GetDirectories())
+                    {
+                        DirectoryInfo buildDir = new DirectoryInfo(directory.FullName + @"\Builds\");
+                        if (Directory.Exists(buildDir.FullName)) {
+                            Debug.Log("Searching " + directory.FullName + " for .csa");
+                            foreach (FileInfo file in buildDir.GetFiles("*.csa"))
+                            {
+                                Debug.Log("Found " + file.FullName);
+                                StartCoroutine(LoadAssetBundle(file));
+                            }
+                        }
+                        else {
+                            Debug.Log(directory.FullName + @"\Builds\" + " does not exist");
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log(projectAdress + " does not exist");
+                }
+            }
+            else
+            {
+                Debug.Log("Project adress was null.");
+            }
+        }
+        else
+        {
+            Debug.Log("Mod loader settings were null.");
+        }
+    }
+    private IEnumerator LoadAssetBundle(FileInfo file)
+    {
+        AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(file.FullName);
+        yield return request;
+
+        if (request.assetBundle != null)
+        {
+            UnityEngine.Object[] objects = request.assetBundle.LoadAllAssets(typeof(GameObject));
+            foreach (UnityEngine.Object prefabObj in objects)
+            {
+                GameObject prefab = (GameObject)prefabObj;
+                AddCustomStaticProp(new CustomStaticProp_AssetBundle(file.Name, prefab.name, prefab.name, UnitSpawn.PlacementModes.Any, true, prefab));
+                Debug.Log("Added " + prefab.name);
+            }
+        }
+        else {
+            Debug.Log("Asset bundle was null");
         }
     }
 

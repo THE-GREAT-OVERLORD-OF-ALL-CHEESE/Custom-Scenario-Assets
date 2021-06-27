@@ -12,7 +12,12 @@ class Patch_VTScenarioEditor_UploadToSteamWorkshop
     [HarmonyPrefix]
     static bool Prefix(VTScenarioEditor __instance)
     {
-        __instance.confirmDialogue.DisplayConfirmation("I'm sorry dave", "I can't let you do that yet. The game doesn't have any fail safes for if it loads a scenario with an object it doesn't know and it softlocks peoples games. This will probably be fixed in an update.", null, null);
-        return false;
+        if (Input.GetKey(KeyCode.F) && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.X)) {
+            return true;
+        }
+        else {
+            __instance.confirmDialogue.DisplayConfirmation("I'm sorry dave", "I can't let you do that yet. The game doesn't have any fail safes for if it loads a scenario with an object it doesn't know and it softlocks peoples games. This will probably be fixed in an update.", null, null);
+            return false;
+        }
     }
 }

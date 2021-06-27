@@ -178,7 +178,7 @@ public class CustomUnit_ExampleAAGun : CustomUnitBase
         ai.fireInterval = 2;
 
         ai.inaccuracyFactor = 1;
-        ai.inaccuracyFactor = 4;
+        ai.inaccuracyRate = 4;
 
         ai.leadSweep = 3;
         ai.leadSweepRate = 5;

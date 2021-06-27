@@ -37,8 +37,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="CustomAssetClasses">
-      <HintPath>..\Builds\CustomAssetClasses.dll</HintPath>
+    <Reference Include="CustomAssetClasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Airships\Builds\Dependencies\CustomAssetClasses.dll</HintPath>
     </Reference>
     <Reference Include="ModLoader">
       <HintPath>..\Dependencies\ModLoader.dll</HintPath>
@@ -72,9 +73,13 @@
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
+    <Reference Include="Valve.Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\Valve.Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\AI_AirburstHelper.cs" />
+    <Compile Include="CSAUtilities.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
@@ -85,6 +90,8 @@
     <Compile Include="CustomUnit\CustomUnitBase.cs" />
     <Compile Include="CustomUnit\CustomUnit_AngryCube.cs" />
     <Compile Include="CustomUnit\CustomUnit_ExampleAAGun.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
     <Compile Include="Patches\Patch_Actor.cs" />
@@ -100,6 +107,9 @@
   <PropertyGroup>
     <PostBuildEvent>IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
 copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"
+)
+IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
+copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\mods\Custom Scenario Assets\CustomScenarioAssets.dll"
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>
