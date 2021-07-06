@@ -12,7 +12,7 @@ class Patch_UnitCatalogue_UpdateCatalogue
     [HarmonyPostfix]
     static void Postfix()
     {
-        if (CustomScenarioAssets.instance.updatedAircraft)
+        if (CustomScenarioAssets.instance.updatedAircraft || CustomScenarioAssets.instance.customUnits == null)
         {
             return;
         }
@@ -105,7 +105,15 @@ class Patch_UnitCatalogue_GetUnit
             __result = unit;
             return false;
         }
-        __result = null;
-        return true;
+        if (CustomScenarioAssets.instance.baseUnits.Contains(unitID))
+        {
+            __result = null;
+            return true;
+        }
+        else {
+            CustomScenarioAssets.instance.ReportMissingUnit(unitID);
+            __result = null;
+            return true;
+        }
     }
 }

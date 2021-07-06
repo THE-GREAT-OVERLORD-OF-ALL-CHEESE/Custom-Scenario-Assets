@@ -9,7 +9,7 @@ public class CustomStaticProp_AssetBundle : CustomStaticPropBase
 {
     public GameObject prefab;
 
-    public CustomStaticProp_AssetBundle(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, GameObject prefab) : base(category, id, name, placementMode, alignToSurface)
+    public CustomStaticProp_AssetBundle(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, GameObject prefab, bool hidden = false) : base(category, id, name, placementMode, alignToSurface, hidden)
     {
         this.prefab = prefab;
     }

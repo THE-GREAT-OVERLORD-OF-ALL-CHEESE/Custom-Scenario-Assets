@@ -21,3 +21,13 @@ class Patch_VTScenarioEditor_UploadToSteamWorkshop
         }
     }
 }
+
+[HarmonyPatch(typeof(VTScenarioEditor), "LoadScenario")]
+class Patch_VTScenarioEditor_LoadScenario
+{
+    [HarmonyPostfix]
+    static void Postfix(VTScenarioEditor __instance)
+    {
+        CustomScenarioAssets.instance.ShowMissingAssetsErrorEditor(__instance);
+    }
+}

@@ -19,6 +19,14 @@ public class CustomScenarioAssets : VTOLMOD
     public Dictionary<string, CustomUnitBase> customUnits;
     public Dictionary<string, UnitCatalogue.Unit> unitCatalogUnits;
 
+    public List<string> baseProps;
+    public List<string> baseUnits;
+
+    public List<string> uniqueMissingProps;
+    public List<string> uniqueMissingUnits;
+
+    public CustomStaticPropBase failSafeProp;
+
     public GameObject firePrefab;
     public GameObject largeFirePrefab;
     public AudioClip cannonClip;
@@ -34,6 +42,7 @@ public class CustomScenarioAssets : VTOLMOD
         instance = this;
 
         VTMapEdResources.LoadAll();
+        GetBaseAssetLists();
 
         customProps = new Dictionary<string, CustomStaticPropBase>();
 
@@ -48,6 +57,10 @@ public class CustomScenarioAssets : VTOLMOD
         AddCustomStaticProp(new CustomStaticProp_ATCTower("Airport Parts", "cheese_airport_tower", "Tower", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportTentHangar("Airport Parts", "cheese_airport_tentHangar", "Tent Hangar", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportJumboHangar("Airport Parts", "cheese_airport_jumboHangar", "Jumbo Hangar", UnitSpawn.PlacementModes.Any, true));
+        
+        failSafeProp = new CustomStaticProp_FailSafe("Fail Safe", "cheese_failsafeobject", "Fail Safe", UnitSpawn.PlacementModes.Any, true, false);
+        AddCustomStaticProp(failSafeProp);
+
         LoadAssetBundles();
 
         customUnits = new Dictionary<string, CustomUnitBase>();
@@ -60,6 +73,9 @@ public class CustomScenarioAssets : VTOLMOD
 
         AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Allied, "Test Category", "cheese_example_aabofors_allied", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
         AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Enemy, "Test Category", "cheese_example_aabofors_enemy", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
+
+        uniqueMissingProps = new List<string>();
+        uniqueMissingUnits = new List<string>();
 
         GetFirePrefabs();
     }
@@ -161,9 +177,48 @@ public class CustomScenarioAssets : VTOLMOD
         }
     }
 
+    private void GetBaseAssetLists() {
+        Debug.Log("Getting base game assets.");
+
+        Debug.Log("Getting base game static object names.");
+        baseProps = new List<string>();
+        List<VTStaticObject> staticObjects = VTResources.GetAllStaticObjectPrefabs();
+        foreach (VTStaticObject staticObject in staticObjects) {
+            baseProps.Add(staticObject.name);
+        }
+
+        Debug.Log("Getting base game units.");
+        UnitCatalogue.UpdateCatalogue();
+        baseUnits = new List<string>();
+        foreach (KeyValuePair<Teams, UnitCatalogue.UnitTeam> team in UnitCatalogue.catalogue)
+        {
+            foreach (UnitCatalogue.Unit unit in team.Value.allUnits)
+            {
+                baseUnits.Add(unit.prefabName);
+            }
+        }
+    }
+
     private void SceneLoaded(VTOLScenes scene)
     {
+        switch (scene)
+        {
+            case VTOLScenes.Akutan:
+            case VTOLScenes.CustomMapBase:
+            case VTOLScenes.CustomMapBase_OverCloud:
+                StartCoroutine("SetupScene");
+                break;
+        }
+    }
 
+    private IEnumerator SetupScene()
+    {
+        while (VTMapManager.fetch == null || !VTMapManager.fetch.scenarioReady || FlightSceneManager.instance.switchingScene)
+        {
+            yield return null;
+        }
+
+        ShowMissingAssetsErrorGame();
     }
 
     public void AddCustomStaticProp(CustomStaticPropBase prop) {
@@ -179,21 +234,39 @@ public class CustomScenarioAssets : VTOLMOD
 
     public List<VTStaticObject> GenerateFakeVTPrefabs()
     {
+        Debug.Log("Generating fake VT Prefabs");
         List<VTStaticObject> staticObjectPrefabs = new List<VTStaticObject>();
-        foreach (KeyValuePair<string, CustomStaticPropBase> entry in customProps)
+
+        if (customProps != null)
         {
-            GameObject temp = entry.Value.Spawn();
-            temp.name = entry.Value.objectID;
-            VTStaticObject staticObject = temp.AddComponent<VTStaticObject>();
-            staticObject.category = entry.Value.category;
-            staticObject.alignToSurface = entry.Value.alignToSurface;
-            staticObject.objectName = entry.Value.objectName;
-            staticObject.placementMode = entry.Value.placementMode;
-            staticObject.spawnObjects = new List<VTStaticObject.SpawnObject>();
+            foreach (KeyValuePair<string, CustomStaticPropBase> entry in customProps)
+            {
+                Debug.Log("Generating " + entry.Key);
+                GameObject temp = entry.Value.Spawn();
+                if (temp != null)
+                {
+                    temp.name = entry.Value.objectID;
+                    VTStaticObject staticObject = temp.AddComponent<VTStaticObject>();
+                    staticObject.category = entry.Value.category;
+                    staticObject.alignToSurface = entry.Value.alignToSurface;
+                    staticObject.objectName = entry.Value.objectName;
+                    staticObject.placementMode = entry.Value.placementMode;
+                    staticObject.spawnObjects = new List<VTStaticObject.SpawnObject>();
+                    staticObject.editorOnly = entry.Value.hidden;
 
-            temp.transform.position = Vector3.down * 30000;
+                    temp.transform.position = Vector3.down * 30000;
 
-            staticObjectPrefabs.Add(staticObject);
+                    staticObjectPrefabs.Add(staticObject);
+                }
+                else
+                {
+                    Debug.Log(entry.Key + " didn't spawn anything? this is broken");
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("the prop dictionary is null");
         }
         return staticObjectPrefabs;
     }
@@ -207,6 +280,7 @@ public class CustomScenarioAssets : VTOLMOD
         staticObject.objectName = prop.objectName;
         staticObject.placementMode = prop.placementMode;
         staticObject.spawnObjects = new List<VTStaticObject.SpawnObject>();
+        staticObject.editorOnly = prop.hidden;
         temp.transform.position = Vector3.down * 30000;
         Destroy(temp, 1);
         return temp;
@@ -248,5 +322,121 @@ public class CustomScenarioAssets : VTOLMOD
         Debug.Log("Trying to get cannon SFX!");
         cannonClip = UnitCatalogue.GetUnitPrefab("alliedMBT1").GetComponent<Gun>().fireAudioClip;
         Debug.Log("Got cannon SFX!");
+    }
+
+    public void ReportMissingProp(string propID)
+    {
+        if (uniqueMissingProps.Contains(propID) == false)
+        {
+            Debug.Log("prop: " + propID + " is missing.");
+            uniqueMissingProps.Add(propID);
+        }
+    }
+
+    public void ReportMissingUnit(string unitID)
+    {
+        if (uniqueMissingUnits.Contains(unitID) == false)
+        {
+            Debug.Log("unit: " + unitID + " is missing.");
+            uniqueMissingUnits.Add(unitID);
+        }
+    }
+
+    public void ShowMissingAssetsErrorGame()
+    {
+        Debug.Log("Checking for missing assets.");
+        if (uniqueMissingProps.Count > 0 || uniqueMissingUnits.Count > 0)
+        {
+            string warning = "Your game is missing assets needed for this scenario! It will not behave as intended. ";
+            warning += "Please make sure all the required assets for this scenario are installed and loaded!\n";
+
+            if (uniqueMissingProps.Count > 0)
+            {
+                warning += "Missing Static Objects: ";
+                for (int i = 0; i < uniqueMissingProps.Count; i++)
+                {
+                    warning += uniqueMissingProps[i];
+                    if (i < uniqueMissingProps.Count - 1)
+                    {
+                        warning += ",";
+                    }
+                    warning += "\n";
+                }
+            }
+
+            if (uniqueMissingUnits.Count > 0)
+            {
+                warning += "Missing Units: ";
+                for (int i = 0; i < uniqueMissingUnits.Count; i++)
+                {
+                    warning += uniqueMissingUnits[i];
+                    if (i < uniqueMissingUnits.Count - 1)
+                    {
+                        warning += ",";
+                    }
+                    warning += "\n";
+                }
+            }
+
+            warning += "\nThis message will disappear in 60 seconds.";
+            TutorialLabel.instance.DisplayLabel(warning,
+            null,
+            60);
+            Debug.Log(warning);
+
+            uniqueMissingProps = new List<string>();
+            uniqueMissingUnits = new List<string>();
+        }
+        else {
+            Debug.Log("No assets are missing!");
+        }
+    }
+
+    public void ShowMissingAssetsErrorEditor(VTScenarioEditor editor)
+    {
+        Debug.Log("Checking for missing assets.");
+        if (uniqueMissingProps.Count > 0 || uniqueMissingUnits.Count > 0)
+        {
+            string warning = "You have loaded a scenario that contains assets you are missing. ";
+            warning += "Please make sure all the required assets are installed and loaded!\n";
+
+            if (uniqueMissingProps.Count > 0)
+            {
+                warning += "Missing Static Objects: ";
+                for (int i = 0; i < uniqueMissingProps.Count; i++)
+                {
+                    warning += uniqueMissingProps[i];
+                    if (i < uniqueMissingProps.Count - 1)
+                    {
+                        warning += ",";
+                    }
+                    warning += "\n";
+                }
+            }
+
+            if (uniqueMissingUnits.Count > 0)
+            {
+                warning += "Missing Units: ";
+                for (int i = 0; i < uniqueMissingUnits.Count; i++)
+                {
+                    warning += uniqueMissingUnits[i];
+                    if (i < uniqueMissingUnits.Count - 1)
+                    {
+                        warning += ",";
+                    }
+                    warning += "\n";
+                }
+            }
+
+            editor.confirmDialogue.DisplayConfirmation("Missing Assets!", warning, null, null);
+            Debug.Log(warning);
+
+            uniqueMissingProps = new List<string>();
+            uniqueMissingUnits = new List<string>();
+        }
+        else
+        {
+            Debug.Log("No assets are missing!");
+        }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class CustomStaticProp_ATCTower : CustomStaticPropBase
 {
-    public CustomStaticProp_ATCTower(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface) : base(category, id, name, placementMode, alignToSurface)
+    public CustomStaticProp_ATCTower(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, bool hidden = false) : base(category, id, name, placementMode, alignToSurface, hidden)
     {
 
     }

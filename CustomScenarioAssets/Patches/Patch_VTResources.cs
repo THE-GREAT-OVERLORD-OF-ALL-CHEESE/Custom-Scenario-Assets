@@ -31,7 +31,16 @@ class Patch_VTResources_GetStaticObjectPrefab
             __result = CustomScenarioAssets.instance.CreateTempVTPrefab(prop);
             return false;
         }
-        __result = null;
-        return true;
+        if (CustomScenarioAssets.instance.baseProps.Contains(id))
+        {
+            __result = null;
+            return true;
+        }
+        else
+        {
+            CustomScenarioAssets.instance.ReportMissingProp(id);
+            __result = CustomScenarioAssets.instance.CreateTempVTPrefab(CustomScenarioAssets.instance.failSafeProp);
+            return false;
+        }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class CustomStaticProp_CarrierArrestor : CustomStaticPropBase
 {
-    public CustomStaticProp_CarrierArrestor(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface) : base(category, id, name, placementMode, alignToSurface)
+    public CustomStaticProp_CarrierArrestor(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, bool hidden = false) : base(category, id, name, placementMode, alignToSurface, hidden)
     {
 
     }

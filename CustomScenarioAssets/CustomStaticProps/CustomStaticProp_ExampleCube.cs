@@ -9,7 +9,7 @@ public class CustomStaticProp_ExampleCube : CustomStaticPropBase
 {
     public float scale = 1;
 
-    public CustomStaticProp_ExampleCube(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, float scale) : base(category, id, name, placementMode, alignToSurface)
+    public CustomStaticProp_ExampleCube(string category, string id, string name, UnitSpawn.PlacementModes placementMode, bool alignToSurface, float scale, bool hidden = false) : base(category, id, name, placementMode, alignToSurface, hidden)
     {
         this.scale = scale;
     }

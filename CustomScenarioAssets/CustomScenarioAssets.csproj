@@ -87,6 +87,7 @@
     <Compile Include="CustomStaticProps\CustomStaticProp_Arrestor.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_Catapult.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_ExampleCube.cs" />
+    <Compile Include="CustomStaticProps\CustomStaticProp_FailSafe.cs" />
     <Compile Include="CustomUnit\CustomUnitBase.cs" />
     <Compile Include="CustomUnit\CustomUnit_AngryCube.cs" />
     <Compile Include="CustomUnit\CustomUnit_ExampleAAGun.cs" />
