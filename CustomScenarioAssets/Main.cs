@@ -58,7 +58,7 @@ public class CustomScenarioAssets : VTOLMOD
         AddCustomStaticProp(new CustomStaticProp_AirportTentHangar("Airport Parts", "cheese_airport_tentHangar", "Tent Hangar", UnitSpawn.PlacementModes.Any, true));
         AddCustomStaticProp(new CustomStaticProp_AirportJumboHangar("Airport Parts", "cheese_airport_jumboHangar", "Jumbo Hangar", UnitSpawn.PlacementModes.Any, true));
         
-        failSafeProp = new CustomStaticProp_FailSafe("Fail Safe", "cheese_failsafeobject", "Fail Safe", UnitSpawn.PlacementModes.Any, true, false);
+        failSafeProp = new CustomStaticProp_FailSafe("Fail Safe", "cheese_failsafeobject", "Missing Asset", UnitSpawn.PlacementModes.Any, true, false);
         AddCustomStaticProp(failSafeProp);
 
         LoadAssetBundles();
@@ -168,8 +168,15 @@ public class CustomScenarioAssets : VTOLMOD
             foreach (UnityEngine.Object prefabObj in objects)
             {
                 GameObject prefab = (GameObject)prefabObj;
-                AddCustomStaticProp(new CustomStaticProp_AssetBundle(file.Name, prefab.name, prefab.name, UnitSpawn.PlacementModes.Any, true, prefab));
-                Debug.Log("Added " + prefab.name);
+                UnitSpawn spawn = prefab.GetComponent<UnitSpawn>();
+                if (spawn == null) {
+                    AddCustomStaticProp(new CustomStaticProp_AssetBundle(file.Name, prefab.name, prefab.name, UnitSpawn.PlacementModes.Any, true, prefab));
+                    Debug.Log("Added " + prefab.name + " as a static object");
+                }
+                else {
+                    AddCustomUnit(new CustomUnit_AssetBundle(spawn.actor.team, spawn.category, prefab.name, spawn.unitName, spawn.unitDescription, UnitSpawn.PlacementModes.Any, true, prefab));
+                    Debug.Log("Added " + prefab.name + " as a custom unit");
+                }
             }
         }
         else {

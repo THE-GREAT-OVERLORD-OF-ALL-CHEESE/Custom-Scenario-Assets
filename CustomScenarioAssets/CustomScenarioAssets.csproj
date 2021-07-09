@@ -90,6 +90,7 @@
     <Compile Include="CustomStaticProps\CustomStaticProp_FailSafe.cs" />
     <Compile Include="CustomUnit\CustomUnitBase.cs" />
     <Compile Include="CustomUnit\CustomUnit_AngryCube.cs" />
+    <Compile Include="CustomUnit\CustomUnit_AssetBundle.cs" />
     <Compile Include="CustomUnit\CustomUnit_ExampleAAGun.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
