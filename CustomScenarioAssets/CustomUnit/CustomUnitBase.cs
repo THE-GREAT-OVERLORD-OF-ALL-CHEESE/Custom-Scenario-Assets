@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-
-/*public class CustomUnitBase
+public class CustomUnitBase
 {
     public Teams team = Teams.Allied;
     public string category = "Test Catagory";
@@ -70,11 +69,11 @@ using UnityEngine;
 
         Debug.Log("Adding fire");
         VehicleFireDeath fire = root.AddComponent<VehicleFireDeath>();
-        fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
+        //fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
         fire.explosionType = ExplosionManager.ExplosionTypes.Small;
 
         root.SetActive(true);
 
         return root;
     }
-}*/
+}

@@ -37,7 +37,7 @@ class Patch_VTEditorSpawnRenderer_Start
 		Debug.Log("Setup colour.");
 
 		bool flag = false;
-		GameObject gameObject = CustomScenarioAssets.instance.CreateTempCustomUnitPrefab(CustomScenarioAssets.instance.customUnits[spawner.unitID]);
+		GameObject gameObject = GameObject.Instantiate(CustomScenarioAssets.instance.customUnits[spawner.unitID].gameObject);
 		MeshFilter[] componentsInChildren = gameObject.GetComponentsInChildren<MeshFilter>();
 		Vector3 pos = -gameObject.transform.position;
 		Quaternion q = Quaternion.Inverse(gameObject.transform.rotation);

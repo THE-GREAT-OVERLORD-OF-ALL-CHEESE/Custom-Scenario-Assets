@@ -44,7 +44,7 @@ public class CustomUnit_ExampleAAGun : CustomUnitBase
 
         Debug.Log("Adding fire");
         VehicleFireDeath fire = root.AddComponent<VehicleFireDeath>();
-        fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
+        //fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
         fire.explosionType = ExplosionManager.ExplosionTypes.Small;
 
         Debug.Log("Adding actor");
@@ -150,7 +150,7 @@ public class CustomUnit_ExampleAAGun : CustomUnitBase
         gun.fireAudioSource.minDistance = 80;
         gun.fireAudioSource.minDistance = 4500;
         gun.fireAudioSource.spatialBlend = 1;
-        gun.fireAudioClip = CustomScenarioAssets.instance.cannonClip;
+        //gun.fireAudioClip = CustomScenarioAssets.instance.cannonClip;
 
         Debug.Log("Adding AI");
         GameObject finderTf = new GameObject();

@@ -18,43 +18,50 @@ class Patch_UnitCatalogue_UpdateCatalogue
         }
         CustomScenarioAssets.instance.updatedAircraft = true;
 
-        Debug.Log("Adding custom units.");
+        Debug.Log("Adding custom units to unit catalog.");
 
-        foreach (KeyValuePair<string, CustomUnitBase> item in CustomScenarioAssets.instance.customUnits)
+        foreach (KeyValuePair<string, UnitSpawn> item in CustomScenarioAssets.instance.customUnits)
         {
-            CustomUnitBase unit = item.Value;
+            UnitSpawn unit = item.Value;
+
+            Debug.Log("finding unit team");
+            Teams team = unit.gameObject.GetComponentInChildren<Actor>().team;
+            Debug.Log("found unit team");
 
             UnitCatalogue.Unit catalogueUnit = new UnitCatalogue.Unit();
-            catalogueUnit.prefabName = unit.unitID;
+            catalogueUnit.prefabName = unit.name;
             catalogueUnit.name = unit.unitName;
-            catalogueUnit.description = unit.description;
-            catalogueUnit.teamIdx = (int)unit.team;
+            catalogueUnit.description = unit.unitDescription;
+            catalogueUnit.teamIdx = (int)team;
             catalogueUnit.isPlayerSpawn = false;
             catalogueUnit.hideFromEditor = false;
+            catalogueUnit.resourcePath = unit.name;
 
-            UnitCatalogue.UnitTeam team = UnitCatalogue.catalogue[unit.team];
+            UnitCatalogue.UnitTeam unitTeam = UnitCatalogue.catalogue[team];
 
             UnitCatalogue.UnitCategory category;
-            if (team.categories.TryGetValue(unit.category, out category) == false) {
+            if (unitTeam.categories.TryGetValue(unit.category, out category) == false) {
                 category = new UnitCatalogue.UnitCategory();
                 category.name = unit.category;
-                team.categories.Add(unit.category, category);
-                team.keys.Add(unit.category);
+                unitTeam.categories.Add(unit.category, category);
+                unitTeam.keys.Add(unit.category);
             }
 
-            catalogueUnit.categoryIdx = team.keys.IndexOf(unit.category);
+            catalogueUnit.categoryIdx = unitTeam.keys.IndexOf(unit.category);
             catalogueUnit.unitIdx = category.keys.Count - 1;
 
 
-            if (category.units.ContainsKey(unit.unitID) == false)
+            Debug.Log("updating lists and dictionaries");
+            if (category.units.ContainsKey(unit.name) == false)
             {
-                category.units.Add(unit.unitID, catalogueUnit);
+                category.units.Add(unit.name, catalogueUnit);
             }
-            if (CustomScenarioAssets.instance.unitCatalogUnits.ContainsKey(unit.unitID) == false)
+            if (CustomScenarioAssets.instance.unitCatalogUnits.ContainsKey(unit.name) == false)
             {
-                CustomScenarioAssets.instance.unitCatalogUnits.Add(unit.unitID, catalogueUnit);
+                CustomScenarioAssets.instance.unitCatalogUnits.Add(unit.name, catalogueUnit);
             }
         }
+        Debug.Log("setting up allied and enemy catagory options");
 
         UnitCatalogue.categoryOptions = new Dictionary<Teams, string[]>();
         string[] alliedUnits = new string[UnitCatalogue.catalogue[Teams.Allied].categories.Count];
@@ -82,10 +89,10 @@ class Patch_UnitCatalogue_GetUnitPrefab
     [HarmonyPrefix]
     static bool Prefix(out GameObject __result, string unitID)
     {
-        CustomUnitBase unit;
+        UnitSpawn unit;
         if (CustomScenarioAssets.instance.customUnits.TryGetValue(unitID, out unit))
         {
-            __result = CustomScenarioAssets.instance.CreateTempCustomUnitPrefab(unit);
+            __result = unit.gameObject;
             return false;
         }
         __result = null;

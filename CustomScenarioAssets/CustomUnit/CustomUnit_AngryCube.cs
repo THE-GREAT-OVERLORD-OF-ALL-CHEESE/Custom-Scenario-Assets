@@ -57,7 +57,7 @@ public class CustomUnit_AngryCube : CustomUnitBase
 
         Debug.Log("Adding fire");
         VehicleFireDeath fire = root.AddComponent<VehicleFireDeath>();
-        fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
+        //fire.firePrefab = CustomScenarioAssets.instance.firePrefab;
         fire.explosionType = ExplosionManager.ExplosionTypes.Small;
 
         root.SetActive(true);

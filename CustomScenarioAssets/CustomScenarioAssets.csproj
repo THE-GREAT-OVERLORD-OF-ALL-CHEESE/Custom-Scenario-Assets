@@ -34,12 +34,9 @@
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomAssetClasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Airships\Builds\Dependencies\CustomAssetClasses.dll</HintPath>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ModLoader">
       <HintPath>..\Dependencies\ModLoader.dll</HintPath>
@@ -78,8 +75,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\AI_AirburstHelper.cs" />
-    <Compile Include="CSAUtilities.cs" />
+    <Compile Include="CustomMonoBehaviours\AI_AirburstHelper.cs" />
+    <Compile Include="CustomHPEquips\CustomHPEquipBase.cs" />
+    <Compile Include="CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
+    <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
     <Compile Include="CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
@@ -95,10 +94,10 @@
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
     <Compile Include="Patches\Patch_Actor.cs" />
     <Compile Include="Patches\Patch_UnitCatalogue.cs" />
     <Compile Include="Patches\Patch_VTEditorSpawnRenderer.cs" />
+    <Compile Include="Patches\Patch_VTNetworkManager.cs" />
     <Compile Include="Patches\Patch_VTResources.cs" />
     <Compile Include="Patches\Patch_VTScenarioEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -109,9 +108,6 @@
   <PropertyGroup>
     <PostBuildEvent>IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
 copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"
-)
-IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\mods\Custom Scenario Assets\CustomScenarioAssets.dll"
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>
