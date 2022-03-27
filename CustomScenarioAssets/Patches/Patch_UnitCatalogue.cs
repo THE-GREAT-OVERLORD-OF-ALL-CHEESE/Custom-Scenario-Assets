@@ -35,7 +35,7 @@ class Patch_UnitCatalogue_UpdateCatalogue
             catalogueUnit.teamIdx = (int)team;
             catalogueUnit.isPlayerSpawn = false;
             catalogueUnit.hideFromEditor = false;
-            catalogueUnit.resourcePath = unit.name;
+            catalogueUnit.resourcePath = $"csa/units/{unit.name}";
 
             UnitCatalogue.UnitTeam unitTeam = UnitCatalogue.catalogue[team];
 

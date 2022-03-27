@@ -13,7 +13,6 @@
   "preview_image": "",
   "web_preview_image": "",
   "dependencies": [
-    "CustomAssetClasses.dll"
   ],
   "ContentType": 1
 }

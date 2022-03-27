@@ -75,22 +75,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomMonoBehaviours\AI_AirburstHelper.cs" />
-    <Compile Include="CustomHPEquips\CustomHPEquipBase.cs" />
-    <Compile Include="CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_ATCTower.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_Arrestor.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_Catapult.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_ExampleCube.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_FailSafe.cs" />
-    <Compile Include="CustomUnit\CustomUnitBase.cs" />
-    <Compile Include="CustomUnit\CustomUnit_AngryCube.cs" />
-    <Compile Include="CustomUnit\CustomUnit_AssetBundle.cs" />
-    <Compile Include="CustomUnit\CustomUnit_ExampleAAGun.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_AirburstHelper.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_AutoFlaps.cs" />
+    <Compile Include="Depreciated\CustomHPEquips\CustomHPEquipBase.cs" />
+    <Compile Include="Depreciated\CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticPropBase.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_ATCTower.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_Arrestor.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_Catapult.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_ExampleCube.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_FailSafe.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnitBase.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_AngryCube.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_AssetBundle.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_ExampleAAGun.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />

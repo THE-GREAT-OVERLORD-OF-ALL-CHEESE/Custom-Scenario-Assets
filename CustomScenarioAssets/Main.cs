@@ -8,10 +8,13 @@ using UnityEngine;
 using System.Reflection;
 using Harmony;
 using System.IO;
+using VTNetworking;
 
 public class CustomScenarioAssets : VTOLMOD
 {
     public static CustomScenarioAssets instance;
+
+    public List<AssetBundle> assetBundles;
 
     public Dictionary<string, VTStaticObject> customProps;
 
@@ -43,6 +46,28 @@ public class CustomScenarioAssets : VTOLMOD
         VTMapEdResources.LoadAll();
         GetBaseAssetLists();
 
+        ReloadAssets();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadAssets();
+        }
+    }
+
+    private void ReloadAssets()
+    {
+        if (assetBundles != null)
+        {
+            foreach (AssetBundle assetBundle in assetBundles)
+            {
+                assetBundle.Unload(false);
+            }
+        }
+        assetBundles = new List<AssetBundle>();
+
         customProps = new Dictionary<string, VTStaticObject>();
 
         LoadAssetBundles();
@@ -52,6 +77,8 @@ public class CustomScenarioAssets : VTOLMOD
 
         uniqueMissingProps = new List<string>();
         uniqueMissingUnits = new List<string>();
+
+        updatedAircraft = false;
     }
 
     private void LoadAssetBundles()
@@ -157,6 +184,8 @@ public class CustomScenarioAssets : VTOLMOD
 
         if (request.assetBundle != null)
         {
+            assetBundles.Add(request.assetBundle);
+
             UnityEngine.Object[] objects = request.assetBundle.LoadAllAssets(typeof(GameObject));
             foreach (UnityEngine.Object prefabObj in objects)
             {
@@ -233,7 +262,9 @@ public class CustomScenarioAssets : VTOLMOD
         {
             Debug.Log("custom prop id: " + prop.name + " is unique, adding to custom prop list");
             customProps.Add(prop.name, prop);
-            updatedAircraft = false;
+
+            SetAudioMixerGroup(prop.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/staticObjects/{prop.name}", prop.gameObject);
         }
         else
         {
@@ -247,6 +278,10 @@ public class CustomScenarioAssets : VTOLMOD
         {
             Debug.Log("custom unit id: " + unit.name + " is unique, adding to custom unit list");
             customUnits.Add(unit.name, unit);
+            updatedAircraft = false;
+
+            SetAudioMixerGroup(unit.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/units/{unit.name}", unit.gameObject);
         }
         else
         {
@@ -385,5 +420,13 @@ public class CustomScenarioAssets : VTOLMOD
         }
 
         return staticObjectPrefabs;
+    }
+
+    public void SetAudioMixerGroup(GameObject prefab)
+    {
+        foreach (AudioSource source in prefab.GetComponentsInChildren<AudioSource>(true))
+        {
+            source.outputAudioMixerGroup = VTResources.GetExteriorMixerGroup();
+        }
     }
 }
