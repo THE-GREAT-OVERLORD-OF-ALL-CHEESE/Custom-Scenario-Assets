@@ -9,6 +9,15 @@ namespace CSA.CustomMonoBehaviours
 {
     public class CSA_AI_AutoFlaps : MonoBehaviour
     {
+		public FlightInfo flightInfo;
+		public TiltController tiltController;
+		public AutoPilot autoPilot;
+
+		public bool useAirSpeed;
+		public AnimationCurve speedFlapsCurve;
+		public bool useEngineTilt;
+		public AnimationCurve engineTiltCurve;
+
 		private void Update()
 		{
 			if (useAirSpeed)
@@ -21,14 +30,5 @@ namespace CSA.CustomMonoBehaviours
 				autoPilot.SetFlaps(engineTiltCurve.Evaluate(tiltController.currentTilt / tiltController.maxTilt));
 			}
 		}
-
-		public FlightInfo flightInfo;
-		public TiltController tiltController;
-		public AutoPilot autoPilot;
-
-		public bool useAirSpeed;
-		public AnimationCurve speedFlapsCurve;
-		public bool useEngineTilt;
-		public AnimationCurve engineTiltCurve;
 	}
 }

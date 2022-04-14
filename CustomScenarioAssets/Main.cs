@@ -23,6 +23,8 @@ public class CustomScenarioAssets : VTOLMOD
     //public Dictionary<string, CustomUnitBase> customUnits;
     public Dictionary<string, UnitCatalogue.Unit> unitCatalogUnits;
 
+    public Dictionary<string, HPEquippable> customEquips;
+
     //public Dictionary<string, CustomHPEquipBase> customHPEquips;//scrapped, no player weapons in csa for now
 
     public List<string> baseProps;
@@ -74,6 +76,8 @@ public class CustomScenarioAssets : VTOLMOD
 
         customUnits = new Dictionary<string, UnitSpawn>();
         unitCatalogUnits = new Dictionary<string, UnitCatalogue.Unit>();
+
+        customEquips = new Dictionary<string, HPEquippable>();
 
         uniqueMissingProps = new List<string>();
         uniqueMissingUnits = new List<string>();
@@ -192,6 +196,7 @@ public class CustomScenarioAssets : VTOLMOD
                 GameObject prefab = (GameObject)prefabObj;
                 VTStaticObject prop = prefab.GetComponent<VTStaticObject>();
                 UnitSpawn spawn = prefab.GetComponent<UnitSpawn>();
+                HPEquippable equip = prefab.GetComponent<HPEquippable>();
                 if (prop != null)
                 {
                     AddCustomStaticProp(prop);
@@ -201,6 +206,15 @@ public class CustomScenarioAssets : VTOLMOD
                 {
                     AddCustomUnit(spawn);
                     Debug.Log("Added " + prefab.name + " as a custom unit");
+                }
+                else if (equip != null)
+                {
+                    AddCustomEquip(equip);
+                    Debug.Log("Added " + prefab.name + " as a custom equip");
+                }
+                else
+                {
+                    SetAudioMixerGroup(prefab);
                 }
             }
         }
@@ -286,6 +300,23 @@ public class CustomScenarioAssets : VTOLMOD
         else
         {
             Debug.Log("A unit with the id: " + unit.name + " already exists.");
+        }
+    }
+
+    public void AddCustomEquip(HPEquippable equip)
+    {
+        if (customEquips.ContainsKey(equip.name) == false)
+        {
+            Debug.Log("custom equip id: " + equip.name + " is unique, adding to custom equip list");
+            customEquips.Add($"csa/{equip.name}", equip);
+            updatedAircraft = false;
+
+            SetAudioMixerGroup(equip.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/{equip.name}", equip.gameObject);
+        }
+        else
+        {
+            Debug.Log("A equip with the id: " + equip.name + " already exists.");
         }
     }
 

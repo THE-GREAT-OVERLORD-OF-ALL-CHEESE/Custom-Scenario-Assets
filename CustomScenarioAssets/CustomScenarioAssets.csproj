@@ -111,6 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomMonoBehaviours\CSA_AI_AirburstHelper.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_OnContact.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_SlowUpdate.cs" />
     <Compile Include="CustomMonoBehaviours\CSA_AI_AutoFlaps.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquipBase.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Patch_Resource.cs" />
     <Compile Include="Patches\Patch_Actor.cs" />
     <Compile Include="Patches\Patch_UnitCatalogue.cs" />
     <Compile Include="Patches\Patch_VTEditorSpawnRenderer.cs" />
