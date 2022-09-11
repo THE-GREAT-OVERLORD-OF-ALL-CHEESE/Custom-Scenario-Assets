@@ -19,6 +19,7 @@ public class CustomScenarioAssets : VTOLMOD
     public Dictionary<string, VTStaticObject> customProps;
 
     public bool updatedAircraft;
+    public bool isCatalogueMp;
     public Dictionary<string, UnitSpawn> customUnits;
     //public Dictionary<string, CustomUnitBase> customUnits;
     public Dictionary<string, UnitCatalogue.Unit> unitCatalogUnits;

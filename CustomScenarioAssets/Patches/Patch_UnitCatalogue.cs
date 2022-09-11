@@ -12,8 +12,20 @@ class Patch_UnitCatalogue_UpdateCatalogue
     [HarmonyPostfix]
     static void Postfix()
     {
-        if (CustomScenarioAssets.instance.updatedAircraft || CustomScenarioAssets.instance.customUnits == null)
+        Debug.Log("UnitCatalogue.UpdateCatalogue() was called, checking if we need to add custom units.");
+        if (CustomScenarioAssets.instance.customUnits == null)
         {
+            return;
+        }
+        if (VTScenario.current != null && VTScenario.current.multiplayer != CustomScenarioAssets.instance.isCatalogueMp)
+        {
+            CustomScenarioAssets.instance.isCatalogueMp = VTScenario.current.multiplayer;
+            CustomScenarioAssets.instance.updatedAircraft = false;
+            Debug.Log("The MP state has changed, we will need to generate new custom units for the unit catalog.");
+        }
+        if (CustomScenarioAssets.instance.updatedAircraft)
+        {
+            Debug.Log("Custom AI aircraft are up to date, no need to do anything.");
             return;
         }
         CustomScenarioAssets.instance.updatedAircraft = true;

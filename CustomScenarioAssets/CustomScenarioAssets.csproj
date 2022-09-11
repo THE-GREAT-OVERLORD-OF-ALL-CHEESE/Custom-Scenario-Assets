@@ -114,6 +114,7 @@
     <Compile Include="CustomMonoBehaviours\CSA_AI_OnContact.cs" />
     <Compile Include="CustomMonoBehaviours\CSA_AI_SlowUpdate.cs" />
     <Compile Include="CustomMonoBehaviours\CSA_AI_AutoFlaps.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_Test_HovercraftPhysics.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquipBase.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
     <Compile Include="Depreciated\CustomStaticProps\CustomStaticPropBase.cs" />
@@ -145,8 +146,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"
-)</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
