@@ -114,7 +114,6 @@
     <Compile Include="CustomMonoBehaviours\CSA_AI_OnContact.cs" />
     <Compile Include="CustomMonoBehaviours\CSA_AI_SlowUpdate.cs" />
     <Compile Include="CustomMonoBehaviours\CSA_AI_AutoFlaps.cs" />
-    <Compile Include="CustomMonoBehaviours\CSA_Test_HovercraftPhysics.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquipBase.cs" />
     <Compile Include="Depreciated\CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
     <Compile Include="Depreciated\CustomStaticProps\CustomStaticPropBase.cs" />

@@ -31,6 +31,9 @@ class Patch_WeaponManager_EquipWeapons
 	[HarmonyPrefix]
 	static bool Prefix(WeaponManager __instance, Loadout loadout)
 	{
+		if (CustomScenarioAssets.instance.customUnits.ContainsKey(__instance.gameObject.name) == false)
+			return true;//this is not a CSA unit, keep running code so that we dont break CWB :)
+
 		Traverse traverse = Traverse.Create(__instance);
 
 		float maxAntiAirRange = 0f;
