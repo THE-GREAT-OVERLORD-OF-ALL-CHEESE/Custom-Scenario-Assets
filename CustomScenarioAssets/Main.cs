@@ -14,6 +14,8 @@ public class CustomScenarioAssets : VTOLMOD
 {
     public static CustomScenarioAssets instance;
 
+    public const string FileExtension = "csa";
+
     public List<AssetBundle> assetBundles;
 
     public Dictionary<string, VTStaticObject> customProps;

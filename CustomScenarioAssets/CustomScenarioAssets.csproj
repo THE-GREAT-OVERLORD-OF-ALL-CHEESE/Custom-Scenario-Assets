@@ -132,8 +132,10 @@
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\MethodUtils.cs" />
     <Compile Include="Patches\Patch_Resource.cs" />
     <Compile Include="Patches\Patch_Actor.cs" />
+    <Compile Include="Patches\Patch_ScenarioExtensions.cs" />
     <Compile Include="Patches\Patch_UnitCatalogue.cs" />
     <Compile Include="Patches\Patch_VTEditorSpawnRenderer.cs" />
     <Compile Include="Patches\Patch_VTNetworkManager.cs" />
