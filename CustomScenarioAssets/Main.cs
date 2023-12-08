@@ -205,7 +205,20 @@ public class CustomScenarioAssets : VTOLMOD
                     {
                         var filePath = Path.Combine(file.Directory.FullName, line);
                         Debug.Log($"Loading {filePath} for {file.FullName}");
-                        Assembly.LoadFrom(filePath);
+                        var assembly = Assembly.LoadFrom(filePath);
+                        
+                        var source =
+                            from t in assembly.GetTypes()
+                            where t.IsSubclassOf(typeof(VTOLMOD))
+                            select t;
+                        
+                        if (source.Count() == 1)
+                        {
+                            GameObject newModGo = new GameObject(line, source.First());
+                            DontDestroyOnLoad(newModGo);
+                            newModGo.GetComponent<VTOLMOD>().ModLoaded();
+                        }
+
                     }
                     catch (Exception e)
                     {
