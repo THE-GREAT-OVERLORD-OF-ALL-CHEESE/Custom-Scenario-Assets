@@ -22,11 +22,11 @@ public class Patch_VTResources_LoadScenariosFromDir
             
             if (codeInstruction.opcode == OpCodes.Ldstr && (string)codeInstruction.operand == ".vts")
             {
-                codeInstructions[i + 1] = new CodeInstruction(OpCodes.Callvirt, MethodUtils.EndsWithVTSNoBInfo());
+                codeInstructions[i + 1] = new CodeInstruction(OpCodes.Call, MethodUtils.EndsWithVTSNoBInfo());
             }
             if (codeInstruction.opcode == OpCodes.Ldstr && (string)codeInstruction.operand == ".vtsb")
             {
-                codeInstructions[i + 1] = new CodeInstruction(OpCodes.Callvirt, MethodUtils.EndsWithVTSBInfo());
+                codeInstructions[i + 1] = new CodeInstruction(OpCodes.Call, MethodUtils.EndsWithVTSBInfo());
             }
 
         }
@@ -292,7 +292,7 @@ public class Patch_VTCampaignInfo_RepairCampaignFileStructure
                             nameof(String.EndsWith), new[] { typeof(string) }))
                         codeInstructions[i + 1] = new CodeInstruction(OpCodes.Callvirt, MethodUtils.EndsWithVTSBInfo());
                     else
-                        codeInstructions[i + 1] = new CodeInstruction(OpCodes.Call, MethodUtils.EqualsVTSBInfo());
+                        codeInstructions[i + 1] = new CodeInstruction(OpCodes.Callvirt, MethodUtils.EqualsVTSBInfo());
                 }
             }
         }
