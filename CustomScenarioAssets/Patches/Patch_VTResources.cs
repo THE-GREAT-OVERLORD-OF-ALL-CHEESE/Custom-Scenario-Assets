@@ -14,7 +14,7 @@ class Patch_VTResources_GetAllStaticObjectPrefabs
     {
         Debug.Log("Adding Custom Assets");
 
-        List<VTStaticObject> objs = CustomScenarioAssets.instance.GenerateFakeVTPrefabs();
+        List<VTStaticObject> objs = CustomScenarioAssets.instance.GenerateCustomVTStaticObjectsList();
 
         __result.AddRange(objs);
     }
@@ -26,9 +26,9 @@ class Patch_VTResources_GetStaticObjectPrefab
     [HarmonyPrefix]
     static bool Prefix(out GameObject __result, string id)
     {
-        CustomStaticPropBase prop;
+        VTStaticObject prop;
         if (CustomScenarioAssets.instance.customProps.TryGetValue(id, out prop)) {
-            __result = CustomScenarioAssets.instance.CreateTempVTPrefab(prop);
+            __result = prop.gameObject;
             return false;
         }
         if (CustomScenarioAssets.instance.baseProps.Contains(id))
@@ -39,7 +39,7 @@ class Patch_VTResources_GetStaticObjectPrefab
         else
         {
             CustomScenarioAssets.instance.ReportMissingProp(id);
-            __result = CustomScenarioAssets.instance.CreateTempVTPrefab(CustomScenarioAssets.instance.failSafeProp);
+            __result = CustomScenarioAssets.instance.customProps["cheese_failsafeobject"].gameObject;
             return false;
         }
     }

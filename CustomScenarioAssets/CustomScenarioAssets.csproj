@@ -31,18 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomAssetClasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Airships\Builds\Dependencies\CustomAssetClasses.dll</HintPath>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="ModLoader">
-      <HintPath>..\Dependencies\ModLoader.dll</HintPath>
+    <Reference Include="ModLoader, Version=5.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\ModLoader.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,53 +51,94 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\Dependencies\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AudioModule">
+    <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Dependencies\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
-    <Reference Include="Valve.Newtonsoft.Json">
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Valve.Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\VTOLVR_Data\Managed\Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\AI_AirburstHelper.cs" />
-    <Compile Include="CSAUtilities.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_ATCTower.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_Arrestor.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_Catapult.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_ExampleCube.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticProp_FailSafe.cs" />
-    <Compile Include="CustomUnit\CustomUnitBase.cs" />
-    <Compile Include="CustomUnit\CustomUnit_AngryCube.cs" />
-    <Compile Include="CustomUnit\CustomUnit_AssetBundle.cs" />
-    <Compile Include="CustomUnit\CustomUnit_ExampleAAGun.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_AirburstHelper.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_OnContact.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_SlowUpdate.cs" />
+    <Compile Include="CustomMonoBehaviours\CSA_AI_AutoFlaps.cs" />
+    <Compile Include="Depreciated\CustomHPEquips\CustomHPEquipBase.cs" />
+    <Compile Include="Depreciated\CustomHPEquips\CustomHPEquip_Cheese_TestGun.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticPropBase.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AirportJumboHangar.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AirportTentHangar.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_AssetBundle.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_ATCTower.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_Arrestor.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_Catapult.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_ExampleCube.cs" />
+    <Compile Include="Depreciated\CustomStaticProps\CustomStaticProp_FailSafe.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnitBase.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_AngryCube.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_AssetBundle.cs" />
+    <Compile Include="Depreciated\CustomUnit\CustomUnit_ExampleAAGun.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LauncherSettings.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="CustomStaticProps\CustomStaticPropBase.cs" />
+    <Compile Include="Patches\MethodUtils.cs" />
+    <Compile Include="Patches\Patch_Resource.cs" />
     <Compile Include="Patches\Patch_Actor.cs" />
+    <Compile Include="Patches\Patch_ScenarioExtensions.cs" />
     <Compile Include="Patches\Patch_UnitCatalogue.cs" />
     <Compile Include="Patches\Patch_VTEditorSpawnRenderer.cs" />
+    <Compile Include="Patches\Patch_VTNetworkManager.cs" />
     <Compile Include="Patches\Patch_VTResources.cs" />
     <Compile Include="Patches\Patch_VTScenarioEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,11 +147,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"
-)
-IF EXIST "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\VTOLVR-ModLoader.exe" (
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_ModLoader\mods\Custom Scenario Assets\CustomScenarioAssets.dll"
-)</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\VTOL VR\VTOLVR_ModLoader\projects\My Mods\Custom Scenario Assets\Builds\CustomScenarioAssets.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

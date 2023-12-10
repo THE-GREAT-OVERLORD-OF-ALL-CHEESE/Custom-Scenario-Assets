@@ -8,28 +8,35 @@ using UnityEngine;
 using System.Reflection;
 using Harmony;
 using System.IO;
+using VTNetworking;
 
 public class CustomScenarioAssets : VTOLMOD
 {
     public static CustomScenarioAssets instance;
 
-    public Dictionary<string, CustomStaticPropBase> customProps;
+    public const string FileExtension = "csa";
+
+    public List<AssetBundle> assetBundles;
+
+    public Dictionary<string, VTStaticObject> customProps;
 
     public bool updatedAircraft;
-    public Dictionary<string, CustomUnitBase> customUnits;
+    public bool isCatalogueMp;
+    public Dictionary<string, UnitSpawn> customUnits;
+    //public Dictionary<string, CustomUnitBase> customUnits;
     public Dictionary<string, UnitCatalogue.Unit> unitCatalogUnits;
+
+    public Dictionary<string, HPEquippable> customEquips;
+
+    //public Dictionary<string, CustomHPEquipBase> customHPEquips;//scrapped, no player weapons in csa for now
 
     public List<string> baseProps;
     public List<string> baseUnits;
+    //public List<string> baseHPEquips;
 
     public List<string> uniqueMissingProps;
     public List<string> uniqueMissingUnits;
-
-    public CustomStaticPropBase failSafeProp;
-
-    public GameObject firePrefab;
-    public GameObject largeFirePrefab;
-    public AudioClip cannonClip;
+    //public List<string> uniqueMissingHPEquips;
 
     public override void ModLoaded()
     {
@@ -44,40 +51,41 @@ public class CustomScenarioAssets : VTOLMOD
         VTMapEdResources.LoadAll();
         GetBaseAssetLists();
 
-        customProps = new Dictionary<string, CustomStaticPropBase>();
+        ReloadAssets();
+    }
 
-        AddCustomStaticProp(new CustomStaticProp_ExampleCube("Cheeses Example Props", "cheese_1m_cube", "1m Cube", UnitSpawn.PlacementModes.Any, false, 1));
-        AddCustomStaticProp(new CustomStaticProp_ExampleCube("Cheeses Example Props", "cheese_10m_cube", "10m Cube", UnitSpawn.PlacementModes.Any, false, 10));
-        AddCustomStaticProp(new CustomStaticProp_ExampleCube("Cheeses Example Props", "cheese_100m_cube", "100m Cube", UnitSpawn.PlacementModes.Any, false, 100));
-        AddCustomStaticProp(new CustomStaticProp_ExampleCube("Cheeses Example Props", "cheese_1000m_cube", "1000m Cube", UnitSpawn.PlacementModes.Any, false, 1000));
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadAssets();
+        }
+    }
 
-        AddCustomStaticProp(new CustomStaticProp_CarrierCatapult("Carrier Accessories", "cheese_carrier_catapult", "Catapult", UnitSpawn.PlacementModes.Any, true));
-        AddCustomStaticProp(new CustomStaticProp_CarrierArrestor("Carrier Accessories", "cheese_carrier_arrestor", "Arrestor", UnitSpawn.PlacementModes.Any, true));
+    private void ReloadAssets()
+    {
+        if (assetBundles != null)
+        {
+            foreach (AssetBundle assetBundle in assetBundles)
+            {
+                assetBundle.Unload(false);
+            }
+        }
+        assetBundles = new List<AssetBundle>();
 
-        AddCustomStaticProp(new CustomStaticProp_ATCTower("Airport Parts", "cheese_airport_tower", "Tower", UnitSpawn.PlacementModes.Any, true));
-        AddCustomStaticProp(new CustomStaticProp_AirportTentHangar("Airport Parts", "cheese_airport_tentHangar", "Tent Hangar", UnitSpawn.PlacementModes.Any, true));
-        AddCustomStaticProp(new CustomStaticProp_AirportJumboHangar("Airport Parts", "cheese_airport_jumboHangar", "Jumbo Hangar", UnitSpawn.PlacementModes.Any, true));
-        
-        failSafeProp = new CustomStaticProp_FailSafe("Fail Safe", "cheese_failsafeobject", "Missing Asset", UnitSpawn.PlacementModes.Any, true, false);
-        AddCustomStaticProp(failSafeProp);
+        customProps = new Dictionary<string, VTStaticObject>();
 
         LoadAssetBundles();
 
-        customUnits = new Dictionary<string, CustomUnitBase>();
+        customUnits = new Dictionary<string, UnitSpawn>();
         unitCatalogUnits = new Dictionary<string, UnitCatalogue.Unit>();
 
-        AddCustomUnit(new CustomUnitBase(Teams.Allied, "Test Category", "cheese_testunit", "Test Unit", "This is an example test unit to test adding custom units!", UnitSpawn.PlacementModes.Any, true));
-
-        AddCustomUnit(new CustomUnit_AngryCube(Teams.Allied, "Test Category", "cheese_angrycube_allied", "Angry Cube", "This is an angry cube to test custom VT events and behaviours! It can't do anything intersting right now.", UnitSpawn.PlacementModes.Any, true));
-        AddCustomUnit(new CustomUnit_AngryCube(Teams.Enemy, "Test Category", "cheese_angrycube_enemy", "Angry Cube", "This is an angry cube to test custom VT events and behaviours! It can't do anything intersting right now.", UnitSpawn.PlacementModes.Any, true));
-
-        AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Allied, "Test Category", "cheese_example_aabofors_allied", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
-        AddCustomUnit(new CustomUnit_ExampleAAGun(Teams.Enemy, "Test Category", "cheese_example_aabofors_enemy", "Example AA Gun", "This is an example anti-aircraft gun vaugly based on a Bofors 40mm gun", UnitSpawn.PlacementModes.Any, true));
+        customEquips = new Dictionary<string, HPEquippable>();
 
         uniqueMissingProps = new List<string>();
         uniqueMissingUnits = new List<string>();
 
-        GetFirePrefabs();
+        updatedAircraft = false;
     }
 
     private void LoadAssetBundles()
@@ -97,11 +105,22 @@ public class CustomScenarioAssets : VTOLMOD
                 Debug.Log("Found " + file.FullName);
                 StartCoroutine(LoadAssetBundle(file));
             }
+            foreach (FileInfo file in info.GetFiles("*.csu"))
+            {
+                Debug.Log("Found " + file.FullName);
+                StartCoroutine(LoadAssetBundle(file));
+            }
 
             foreach (DirectoryInfo directory in info.GetDirectories())
             {
                 Debug.Log("Searching " + address + directory.Name + " for .csa");
-                foreach (FileInfo file in directory.GetFiles("*.csa")) {
+                foreach (FileInfo file in directory.GetFiles("*.csa"))
+                {
+                    Debug.Log("Found " + file.FullName);
+                    StartCoroutine(LoadAssetBundle(file));
+                }
+                foreach (FileInfo file in directory.GetFiles("*.csu"))
+                {
                     Debug.Log("Found " + file.FullName);
                     StartCoroutine(LoadAssetBundle(file));
                 }
@@ -129,15 +148,22 @@ public class CustomScenarioAssets : VTOLMOD
                     foreach (DirectoryInfo directory in info.GetDirectories())
                     {
                         DirectoryInfo buildDir = new DirectoryInfo(directory.FullName + @"\Builds\");
-                        if (Directory.Exists(buildDir.FullName)) {
+                        if (Directory.Exists(buildDir.FullName))
+                        {
                             Debug.Log("Searching " + directory.FullName + " for .csa");
                             foreach (FileInfo file in buildDir.GetFiles("*.csa"))
                             {
                                 Debug.Log("Found " + file.FullName);
                                 StartCoroutine(LoadAssetBundle(file));
                             }
+                            foreach (FileInfo file in buildDir.GetFiles("*.csu"))
+                            {
+                                Debug.Log("Found " + file.FullName);
+                                StartCoroutine(LoadAssetBundle(file));
+                            }
                         }
-                        else {
+                        else
+                        {
                             Debug.Log(directory.FullName + @"\Builds\" + " does not exist");
                         }
                     }
@@ -157,6 +183,7 @@ public class CustomScenarioAssets : VTOLMOD
             Debug.Log("Mod loader settings were null.");
         }
     }
+
     private IEnumerator LoadAssetBundle(FileInfo file)
     {
         AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(file.FullName);
@@ -164,33 +191,88 @@ public class CustomScenarioAssets : VTOLMOD
 
         if (request.assetBundle != null)
         {
+            assetBundles.Add(request.assetBundle);
+            
+            // Loads DLL(s) from the AB location, allows for more complex assets to be made. (Also I wanted it)
+            var dlls = request.assetBundle.LoadAsset<TextAsset>("dll.txt");
+            if (dlls != null)
+            {
+                var reader = new StringReader(dlls.text);
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    try
+                    {
+                        var filePath = Path.Combine(file.Directory.FullName, line);
+                        Debug.Log($"Loading {filePath} for {file.FullName}");
+                        var assembly = Assembly.LoadFrom(filePath);
+                        
+                        var source =
+                            from t in assembly.GetTypes()
+                            where t.IsSubclassOf(typeof(VTOLMOD))
+                            select t;
+                        
+                        if (source.Count() == 1)
+                        {
+                            GameObject newModGo = new GameObject(line, source.First());
+                            DontDestroyOnLoad(newModGo);
+                            newModGo.GetComponent<VTOLMOD>().ModLoaded();
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Couldn't load dll {line} for {file.FullName}:\n {e}");
+                    }
+                    
+                    line = reader.ReadLine();
+                }
+            }
+
             UnityEngine.Object[] objects = request.assetBundle.LoadAllAssets(typeof(GameObject));
+
             foreach (UnityEngine.Object prefabObj in objects)
             {
                 GameObject prefab = (GameObject)prefabObj;
+                VTStaticObject prop = prefab.GetComponent<VTStaticObject>();
                 UnitSpawn spawn = prefab.GetComponent<UnitSpawn>();
-                if (spawn == null) {
-                    AddCustomStaticProp(new CustomStaticProp_AssetBundle(file.Name, prefab.name, prefab.name, UnitSpawn.PlacementModes.Any, true, prefab));
+                HPEquippable equip = prefab.GetComponent<HPEquippable>();
+                if (prop != null)
+                {
+                    AddCustomStaticProp(prop);
                     Debug.Log("Added " + prefab.name + " as a static object");
                 }
-                else {
-                    AddCustomUnit(new CustomUnit_AssetBundle(spawn.actor.team, spawn.category, prefab.name, spawn.unitName, spawn.unitDescription, UnitSpawn.PlacementModes.Any, true, prefab));
+                else if (spawn != null)
+                {
+                    AddCustomUnit(spawn);
                     Debug.Log("Added " + prefab.name + " as a custom unit");
+                }
+                else if (equip != null)
+                {
+                    AddCustomEquip(equip);
+                    Debug.Log("Added " + prefab.name + " as a custom equip");
+                }
+                else
+                {
+                    SetAudioMixerGroup(prefab);
                 }
             }
         }
-        else {
+        else
+        {
             Debug.Log("Asset bundle was null");
         }
     }
 
-    private void GetBaseAssetLists() {
+    private void GetBaseAssetLists()
+    {
         Debug.Log("Getting base game assets.");
 
         Debug.Log("Getting base game static object names.");
         baseProps = new List<string>();
         List<VTStaticObject> staticObjects = VTResources.GetAllStaticObjectPrefabs();
-        foreach (VTStaticObject staticObject in staticObjects) {
+        foreach (VTStaticObject staticObject in staticObjects)
+        {
             baseProps.Add(staticObject.name);
         }
 
@@ -228,107 +310,54 @@ public class CustomScenarioAssets : VTOLMOD
         ShowMissingAssetsErrorGame();
     }
 
-    public void AddCustomStaticProp(CustomStaticPropBase prop) {
-        if (customProps.ContainsKey(prop.objectID) == false) {
-            Debug.Log("custom prop id: " + prop.objectID + " is unique, adding to custom prop list");
-            customProps.Add(prop.objectID, prop);
+    public void AddCustomStaticProp(VTStaticObject prop)
+    {
+        if (customProps.ContainsKey(prop.name) == false)
+        {
+            Debug.Log("custom prop id: " + prop.name + " is unique, adding to custom prop list");
+            customProps.Add(prop.name, prop);
+
+            SetAudioMixerGroup(prop.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/staticObjects/{prop.name}", prop.gameObject);
+        }
+        else
+        {
+            Debug.Log("A prop with the id: " + prop.name + " already exists.");
+        }
+    }
+
+    public void AddCustomUnit(UnitSpawn unit)
+    {
+        if (customUnits.ContainsKey(unit.name) == false)
+        {
+            Debug.Log("custom unit id: " + unit.name + " is unique, adding to custom unit list");
+            customUnits.Add(unit.name, unit);
             updatedAircraft = false;
-        }
-        else {
-            Debug.Log("A prop with the id: " + prop.objectID + " already exists.");
-        }
-    }
 
-    public List<VTStaticObject> GenerateFakeVTPrefabs()
-    {
-        Debug.Log("Generating fake VT Prefabs");
-        List<VTStaticObject> staticObjectPrefabs = new List<VTStaticObject>();
-
-        if (customProps != null)
-        {
-            foreach (KeyValuePair<string, CustomStaticPropBase> entry in customProps)
-            {
-                Debug.Log("Generating " + entry.Key);
-                GameObject temp = entry.Value.Spawn();
-                if (temp != null)
-                {
-                    temp.name = entry.Value.objectID;
-                    VTStaticObject staticObject = temp.AddComponent<VTStaticObject>();
-                    staticObject.category = entry.Value.category;
-                    staticObject.alignToSurface = entry.Value.alignToSurface;
-                    staticObject.objectName = entry.Value.objectName;
-                    staticObject.placementMode = entry.Value.placementMode;
-                    staticObject.spawnObjects = new List<VTStaticObject.SpawnObject>();
-                    staticObject.editorOnly = entry.Value.hidden;
-
-                    temp.transform.position = Vector3.down * 30000;
-
-                    staticObjectPrefabs.Add(staticObject);
-                }
-                else
-                {
-                    Debug.Log(entry.Key + " didn't spawn anything? this is broken");
-                }
-            }
+            SetAudioMixerGroup(unit.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/units/{unit.name}", unit.gameObject);
         }
         else
         {
-            Debug.Log("the prop dictionary is null");
+            Debug.Log("A unit with the id: " + unit.name + " already exists.");
         }
-        return staticObjectPrefabs;
     }
 
-    public GameObject CreateTempVTPrefab(CustomStaticPropBase prop) {
-        GameObject temp = prop.Spawn();
-        temp.name = prop.objectID;
-        VTStaticObject staticObject = temp.AddComponent<VTStaticObject>();
-        staticObject.category = prop.category;
-        staticObject.alignToSurface = prop.alignToSurface;
-        staticObject.objectName = prop.objectName;
-        staticObject.placementMode = prop.placementMode;
-        staticObject.spawnObjects = new List<VTStaticObject.SpawnObject>();
-        staticObject.editorOnly = prop.hidden;
-        temp.transform.position = Vector3.down * 30000;
-        Destroy(temp, 1);
-        return temp;
-    }
-
-    public void AddCustomUnit(CustomUnitBase unit)
+    public void AddCustomEquip(HPEquippable equip)
     {
-        if (customUnits.ContainsKey(unit.unitID) == false)
+        if (customEquips.ContainsKey(equip.name) == false)
         {
-            Debug.Log("custom unit id: " + unit.unitID + " is unique, adding to custom unit list");
-            customUnits.Add(unit.unitID, unit);
+            Debug.Log("custom equip id: " + equip.name + " is unique, adding to custom equip list");
+            customEquips.Add($"csa/{equip.name}", equip);
+            updatedAircraft = false;
+
+            SetAudioMixerGroup(equip.gameObject);
+            VTNetworkManager.RegisterOverrideResource($"csa/{equip.name}", equip.gameObject);
         }
         else
         {
-            Debug.Log("A unit with the id: " + unit.unitID + " already exists.");
+            Debug.Log("A equip with the id: " + equip.name + " already exists.");
         }
-    }
-
-    public GameObject CreateTempCustomUnitPrefab(CustomUnitBase unit)
-    {
-        Debug.Log("Spawning custom unit: " + unit.unitName);
-        GameObject temp = unit.Spawn();
-        temp.transform.position = Vector3.down * 30000;
-        Destroy(temp, 1);
-        return temp;
-    }
-
-    public void GetFirePrefabs() {
-        UnitCatalogue.UpdateCatalogue();
-
-        Debug.Log("Trying to get fire!");
-        firePrefab = UnitCatalogue.GetUnitPrefab("SRADTruck").GetComponent<VehicleFireDeath>().firePrefab;
-        Debug.Log("Got fire!");
-
-        Debug.Log("Trying to get large fire!");
-        largeFirePrefab = UnitCatalogue.GetUnitPrefab("ABomberAI").GetComponent<VehicleFireDeath>().firePrefab;
-        Debug.Log("Got large fire!");
-
-        Debug.Log("Trying to get cannon SFX!");
-        cannonClip = UnitCatalogue.GetUnitPrefab("alliedMBT1").GetComponent<Gun>().fireAudioClip;
-        Debug.Log("Got cannon SFX!");
     }
 
     public void ReportMissingProp(string propID)
@@ -394,7 +423,8 @@ public class CustomScenarioAssets : VTOLMOD
             uniqueMissingProps = new List<string>();
             uniqueMissingUnits = new List<string>();
         }
-        else {
+        else
+        {
             Debug.Log("No assets are missing!");
         }
     }
@@ -444,6 +474,30 @@ public class CustomScenarioAssets : VTOLMOD
         else
         {
             Debug.Log("No assets are missing!");
+        }
+    }
+
+    public List<VTStaticObject> GenerateCustomVTStaticObjectsList()
+    {
+        Debug.Log("Generating VTStaticObjects Prefabs List");
+        List<VTStaticObject> staticObjectPrefabs = new List<VTStaticObject>();
+
+        if (customProps != null)
+        {
+            foreach (KeyValuePair<string, VTStaticObject> entry in customProps)
+            {
+                staticObjectPrefabs.Add(entry.Value);
+            }
+        }
+
+        return staticObjectPrefabs;
+    }
+
+    public void SetAudioMixerGroup(GameObject prefab)
+    {
+        foreach (AudioSource source in prefab.GetComponentsInChildren<AudioSource>(true))
+        {
+            source.outputAudioMixerGroup = VTResources.GetExteriorMixerGroup();
         }
     }
 }

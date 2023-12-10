@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Harmony;
 using UnityEngine;
 
-[HarmonyPatch(typeof(VTScenarioEditor), "UploadToSteamWorkshop")]
+/*[HarmonyPatch(typeof(VTScenarioEditor), "UploadToSteamWorkshop")]
 class Patch_VTScenarioEditor_UploadToSteamWorkshop
 {
     [HarmonyPrefix]
@@ -20,7 +20,7 @@ class Patch_VTScenarioEditor_UploadToSteamWorkshop
             return false;
         }
     }
-}
+}*/
 
 [HarmonyPatch(typeof(VTScenarioEditor), "LoadScenario")]
 class Patch_VTScenarioEditor_LoadScenario

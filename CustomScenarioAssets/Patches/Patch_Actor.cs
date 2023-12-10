@@ -27,6 +27,7 @@ class Patch_Actor_Awake
 	}
 }*/
 
+/*
 [HarmonyPatch(typeof(AIUnitSpawn), "IsNonTarget")]
 class Patch_AIUnitSpawn_IsNonTarget
 {
@@ -43,3 +44,4 @@ class Patch_AIUnitSpawn_IsNonTarget
 		return true;
 	}
 }
+*/
