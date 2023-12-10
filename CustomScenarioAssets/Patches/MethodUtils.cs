@@ -41,7 +41,7 @@ public class MethodUtils
     {
         // Regex checking if a vts file is any of the following. () is optional stuff
         // .(csa)vts(b)
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtsb?)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtsb?)$";
         return Regex.IsMatch(path, pattern);
     }
 
@@ -49,7 +49,7 @@ public class MethodUtils
     {
         // Regex checking if a vts file is any of the following. () is optional stuff
         // .(csa)vts
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vts)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vts)$";
         return Regex.IsMatch(path, pattern);
     }
 
@@ -57,7 +57,7 @@ public class MethodUtils
     {
         // Regex checking if a vts file is any of the following. () is optional stuff
         // .(csa)vtsb
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtsb)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtsb)$";
         return Regex.IsMatch(path, pattern);
     }
     
@@ -65,21 +65,21 @@ public class MethodUtils
     public static bool EqualsVTS(string text, string text2)
     {
         // .(csa)vts(b)
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtsb?)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtsb?)$";
         return Regex.IsMatch(text, pattern);
     }
 
     public static bool EqualsVTSNoB(string text, string text2)
     {
         // .(csa)vts
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vts)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vts)$";
         return Regex.IsMatch(text, pattern);
     }
     
     public static bool EqualsVTSB(string text, string text2)
     {
         // .(csa)vtsb
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtsb)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtsb)$";
         return Regex.IsMatch(text, pattern);
     }
     
@@ -129,21 +129,21 @@ public class MethodUtils
     public static bool EqualsVTM(string text, string text2)
     {
         // .(csa)vtm(b)
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtmb?)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtmb?)$";
         return Regex.IsMatch(text, pattern);
     }
 
     public static bool EqualsVTMNoB(string text, string text2)
     {
         // .(csa)vtm
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtm)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtm)$";
         return Regex.IsMatch(text, pattern);
     }
 
     public static bool EqualsVTMB(string text, string text2)
     {
         // .(csa)vtm
-        string pattern = @$"(\.({CustomScenarioAssets.FileExtension})?vtmb)$";
+        string pattern = $@"(\.({CustomScenarioAssets.FileExtension})?vtmb)$";
         return Regex.IsMatch(text, pattern);
     }
     
