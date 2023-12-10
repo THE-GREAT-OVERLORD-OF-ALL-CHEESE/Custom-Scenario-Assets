@@ -14,6 +14,8 @@ public class CustomScenarioAssets : VTOLMOD
 {
     public static CustomScenarioAssets instance;
 
+    public const string FileExtension = "csa";
+
     public List<AssetBundle> assetBundles;
 
     public Dictionary<string, VTStaticObject> customProps;
@@ -190,8 +192,45 @@ public class CustomScenarioAssets : VTOLMOD
         if (request.assetBundle != null)
         {
             assetBundles.Add(request.assetBundle);
+            
+            // Loads DLL(s) from the AB location, allows for more complex assets to be made. (Also I wanted it)
+            var dlls = request.assetBundle.LoadAsset<TextAsset>("dll.txt");
+            if (dlls != null)
+            {
+                var reader = new StringReader(dlls.text);
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    try
+                    {
+                        var filePath = Path.Combine(file.Directory.FullName, line);
+                        Debug.Log($"Loading {filePath} for {file.FullName}");
+                        var assembly = Assembly.LoadFrom(filePath);
+                        
+                        var source =
+                            from t in assembly.GetTypes()
+                            where t.IsSubclassOf(typeof(VTOLMOD))
+                            select t;
+                        
+                        if (source.Count() == 1)
+                        {
+                            GameObject newModGo = new GameObject(line, source.First());
+                            DontDestroyOnLoad(newModGo);
+                            newModGo.GetComponent<VTOLMOD>().ModLoaded();
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Couldn't load dll {line} for {file.FullName}:\n {e}");
+                    }
+                    
+                    line = reader.ReadLine();
+                }
+            }
 
             UnityEngine.Object[] objects = request.assetBundle.LoadAllAssets(typeof(GameObject));
+
             foreach (UnityEngine.Object prefabObj in objects)
             {
                 GameObject prefab = (GameObject)prefabObj;
