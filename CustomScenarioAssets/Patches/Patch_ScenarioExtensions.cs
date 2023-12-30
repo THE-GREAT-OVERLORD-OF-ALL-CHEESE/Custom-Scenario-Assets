@@ -181,7 +181,7 @@ public class Patch_VTResources_RepairScenarioFilePath
 }
 
 [HarmonyPatch(typeof(VTResources), nameof(VTResources.SaveCustomScenario))]
-public class Patch_VTResources_SaveCustomScenario
+public class Patch_VTResources_SaveCustomScenario_IL
 {
     [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -193,8 +193,6 @@ public class Patch_VTResources_SaveCustomScenario
             {
                 // Load the methods arguments and then check if the scenarios modded to save with the right extension (and delete other one)
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Ldarg_1);
-                yield return new CodeInstruction(OpCodes.Ldarg_2);
                 yield return new CodeInstruction(OpCodes.Call, MethodUtils.ModdedVTSNoBInfo());
 
             }

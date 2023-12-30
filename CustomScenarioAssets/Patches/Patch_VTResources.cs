@@ -63,7 +63,7 @@ class Patch_VTResources_SaveCustomScenario
 			text = Path.Combine(Path.Combine(VTResources.customCampaignsDir, campaignID), fileName);
 		}
 
-		VTSFileHelper.DeleteVTSFile(Path.Combine(text, fileName));
+		VTSFileHelper.DeleteVTSFile(scenario, Path.Combine(text, fileName));
 	}
 }
 
@@ -73,18 +73,24 @@ class Patch_VTResources_UploadScenarioToSteamWorkshop
     [HarmonyPrefix]
     static bool Prefix(VTScenario currentScenario, VTResources.RequestChangeNoteDelegate onRequestChangeNote, Action<WorkshopItemUpdate> onBeginUpdate, Action<WorkshopItemUpdateEventArgs> onComplete, bool autoSubscribe)
 	{
-		VTSFileHelper.DeleteVTSFile(Path.Combine(VTResources.GetScenarioDirectoryPath(currentScenario.scenarioID, currentScenario.campaignID), currentScenario.scenarioID));
+		VTSFileHelper.DeleteVTSFile(currentScenario, Path.Combine(VTResources.GetScenarioDirectoryPath(currentScenario.scenarioID, currentScenario.campaignID), currentScenario.scenarioID));
         return true;
     }
 }
 
 public static class VTSFileHelper
 {
-    public static void DeleteVTSFile(string filepath)
+    public static void DeleteVTSFile(VTScenario scenario, string filepath)
     {
-        if (File.Exists($"{filepath}.vts"))
+        string extension = "vts";
+        
+        if (scenario != null)
         {
-            File.Delete($"{filepath}.vts");
+            extension = MethodUtils.IsVTScenarioModded(scenario) ? "vts" : $"{CustomScenarioAssets.FileExtension}vts";
+        }
+        if (File.Exists($"{filepath}.{extension}"))
+        {
+            File.Delete($"{filepath}.{extension}");
         }
     }
 }
