@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Harmony;
@@ -34,6 +35,18 @@ public class MethodUtils
     
     public static MethodInfo CombineVTSNoBInfo() => AccessTools.Method(typeof(MethodUtils),
         nameof(CombineVTSNoB), new[] { typeof(string), typeof(string) });
+    
+    public static MethodInfo ModdedVTSNoBInfo() => AccessTools.Method(typeof(MethodUtils),
+        nameof(ModdedVTSNoB), new[] { typeof(VTScenario), typeof(string), typeof(string) });
+    
+    public static MethodInfo ModdedVTSBInfo() => AccessTools.Method(typeof(MethodUtils),
+        nameof(ModdedVTSB), new[] { typeof(VTScenario), typeof(string), typeof(string) });
+    
+    public static MethodInfo ModdedEditorVTSNoBInfo() => AccessTools.Method(typeof(MethodUtils),
+        nameof(ModdedEditorVTSNoB), new[] { typeof(VTScenarioEditor) });
+    
+    public static MethodInfo ModdedEditorVTSBInfo() => AccessTools.Method(typeof(MethodUtils),
+        nameof(ModdedEditorVTSB), new[] { typeof(VTScenarioEditor) });
     
     
     
@@ -104,6 +117,97 @@ public class MethodUtils
         text2 = text2.Replace(".vts", $".{CustomScenarioAssets.FileExtension}vts");
 
         return Path.Combine(text, text2);
+    }
+
+    public static string ModdedVTSNoB(VTScenario scenario, string fileName, string campaignId)
+    {
+        bool modded = IsVTScenarioModded(scenario);
+        
+        
+        // this is possibly the best code i have ever written! #blessed
+        if (string.IsNullOrEmpty(campaignId))
+        {
+            string directory = Path.Combine(VTResources.customScenariosDir, fileName);
+            string filePath = Path.Combine(directory, $"{fileName}.{(modded ? "vts" : $"{CustomScenarioAssets.FileExtension}vts")}");
+            
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+        else
+        {
+            string directory = Path.Combine(VTResources.customCampaignsDir, campaignId);
+            string filePath = Path.Combine(Path.Combine(directory, fileName), $"{fileName}.{(modded ? "vts" : $"{CustomScenarioAssets.FileExtension}vts")}");
+            
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        return modded ? $".{CustomScenarioAssets.FileExtension}vts" : ".vts";
+    }
+    
+    public static string ModdedVTSB(VTScenario scenario, string fileName, string campaignId)
+    {
+        bool modded = IsVTScenarioModded(scenario);
+        
+        
+        // this is possibly the best code i have ever written! #blessed
+        if (string.IsNullOrEmpty(campaignId))
+        {
+            string directory = Path.Combine(VTResources.customScenariosDir, fileName);
+            string filePath = Path.Combine(directory, $"{fileName}.{(modded ? "vtsb" : $"{CustomScenarioAssets.FileExtension}vtsb")}");
+            
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+        else
+        {
+            string directory = Path.Combine(VTResources.customCampaignsDir, campaignId);
+            string filePath = Path.Combine(Path.Combine(directory, fileName), $"{fileName}.{(modded ? "vtsb" : $"{CustomScenarioAssets.FileExtension}vtsb")}");
+            
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        return modded ? $".{CustomScenarioAssets.FileExtension}vtsb" : ".vtsb";
+    }
+    
+    public static string ModdedEditorVTSNoB(VTScenarioEditor scenario)
+    {
+        if (IsVTScenarioModded(scenario.currentScenario))
+            return $".{CustomScenarioAssets.FileExtension}vts";
+        return ".vts";
+    }
+    
+    public static string ModdedEditorVTSB(VTScenarioEditor scenario)
+    {
+        if (IsVTScenarioModded(scenario.currentScenario))
+            return $".{CustomScenarioAssets.FileExtension}vtsb";
+        return ".vtsb";
+    }
+
+
+    private static bool IsVTScenarioModded(VTScenario scenario)
+    {
+        if (scenario.units.units.Any(e => CustomScenarioAssets.instance.customUnits.ContainsKey(e.Value.prefabUnitSpawn.name)))
+        {
+            return true;
+        }
+
+        if (scenario.staticObjects.GetAllObjects()
+            .Any(e => CustomScenarioAssets.instance.customProps.ContainsKey(e.name)))
+        {
+            return true;
+        }
+
+        return false;
     }
     
     #endregion
