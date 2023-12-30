@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
-using UnityEngine;
 using VTOLVR.Multiplayer;
 
 #region VTResources
@@ -182,7 +181,7 @@ public class Patch_VTResources_RepairScenarioFilePath
 }
 
 [HarmonyPatch(typeof(VTResources), nameof(VTResources.SaveCustomScenario))]
-public class Patch_VTResources_SaveCustomScenario
+public class Patch_VTResources_SaveCustomScenario_IL
 {
     [HarmonyTranspiler]
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -192,7 +191,10 @@ public class Patch_VTResources_SaveCustomScenario
             // .(csa)vts
             if (codeInstruction.opcode == OpCodes.Ldstr && (string)codeInstruction.operand == ".vts")
             {
-                yield return new CodeInstruction(OpCodes.Ldstr, $".{CustomScenarioAssets.FileExtension}vts");
+                // Load the methods arguments and then check if the scenarios modded to save with the right extension (and delete other one)
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return new CodeInstruction(OpCodes.Call, MethodUtils.ModdedVTSNoBInfo());
+
             }
             else yield return codeInstruction;
         }
@@ -353,31 +355,6 @@ public class Patch_VTEdCampaignEditWindow_OnImportedMission
     }
 }
 
-[HarmonyPatch(typeof(VTEdNewMissionMenu), nameof(VTEdNewMissionMenu.Save))]
-public class Patch_VTEdNewMissionMenu_Save
-{
-    [HarmonyTranspiler]
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-    {
-        var codeInstructions = new List<CodeInstruction>(instructions);
-        for (int i = 0; i < codeInstructions.Count; i++)
-        {
-            var codeInstruction = codeInstructions[i];
-            
-            if (codeInstruction.opcode == OpCodes.Ldstr)
-            {
-                // .(csa)vts(b)
-                if (((string)codeInstruction.operand == ".vts"))
-                    codeInstructions[i + 2] = new CodeInstruction(OpCodes.Call, MethodUtils.CombineVTSNoBInfo());
-                /*if (((string)codeInstruction.operand == ".vtm"))
-                    codeInstructions[i + 2] = new CodeInstruction(OpCodes.Call, MethodUtils.CombineVTMNoBInfo());*/
-            } 
-        }
-
-        return codeInstructions.AsEnumerable();
-    }
-}
-
 [HarmonyPatch(typeof(VTScenarioEditor), nameof(VTScenarioEditor.SaveToNewName))]
 public class Patch_VTEdNewMissionMenu_SaveToNewName
 {
@@ -401,7 +378,10 @@ public class Patch_VTEdNewMissionMenu_SaveToNewName
                         first = false;
                     }
                     else
-                        codeInstructions[i] = new CodeInstruction(OpCodes.Ldstr, $".{CustomScenarioAssets.FileExtension}vts");
+                    {
+                        codeInstructions[i] = new CodeInstruction(OpCodes.Ldarg_0);
+                        codeInstructions.Insert(i + 1, new CodeInstruction(OpCodes.Call, MethodUtils.ModdedEditorVTSNoBInfo()));
+                    }
                 }
             } 
         }
